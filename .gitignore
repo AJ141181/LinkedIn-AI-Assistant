@@ -1,0 +1,25 @@
+# Python cache
+__pycache__/
+*.py[cod]
+
+# Virtual environments
+.venv/
+env/
+ENV/
+
+# Secrets and credentials
+.env
+*.env
+*.key
+*.json
+backend/key/credentials.json
+
+# Logs and junk files
+*.log
+.DS_Store
+
+# Editor settings
+.vscode/
+
+# Node modules (future use)
+node_modules/
