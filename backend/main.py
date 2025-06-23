@@ -19,10 +19,7 @@ def save_post():
         print("📥 Received Post Data:", post_data)
 
         # 🚀 Call root orchestrator agent to process post data
-        #result = asyncio.run(linkedin_orchestrator.arun(post_data))
-        # result = linkedin_orchestrator.run(post_data)
-        #result = linkedin_orchestrator(post_data)
-        #result = asyncio.run(root_agent.arun(post_data))
+        
         result = root_agent(post_data)
         
 
@@ -49,7 +46,9 @@ def generate_comments():
         print("❌ Error in /generate-comments:", str(e))
         return jsonify({"status": "error", "message": str(e)}), 500
 
-
-
 if __name__ == '__main__':
-    app.run(debug=True)  # Local HTTPS for extension compatibility
+    app.run(host='0.0.0.0', port=8080)
+
+
+
+

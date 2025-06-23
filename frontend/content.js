@@ -137,7 +137,8 @@ function injectButtons(postElement) {
     feedbackMsg.textContent = "💾 Saving post…";
     feedbackMsg.style.color = "blue";
 
-    fetch("http://localhost:5000/save-post", {
+    fetch("https://linkedin-curator-198258385336.us-central1.run.app/save-post"
+, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(postData)

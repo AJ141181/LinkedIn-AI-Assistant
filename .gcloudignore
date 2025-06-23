@@ -1,0 +1,11 @@
+.gcloudignore
+.git
+.gitignore
+.DS_Store
+.venv
+.env
+*.pyc
+__pycache__/
+
+# Include credentials explicitly
+!secrets/credentials.json

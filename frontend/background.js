@@ -7,6 +7,15 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
     sendResponse({ status: "saved" });
   }
 
+  if (request.action === "get_post_data") {
+    // New action used by popup-comment.js to retrieve post text
+    if (!latestPostData) {
+      sendResponse({ error: "No post data available." });
+    } else {
+      sendResponse({ text: latestPostData.text });
+    }
+  }
+
   if (request.action === "get_comments") {
     if (!latestPostData) {
       sendResponse({ error: "No post data available." });
@@ -15,7 +24,7 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
 
     console.log("🧠 Fetching comment suggestions for:", latestPostData);
 
-    fetch("http://localhost:5000/generate-comments", {
+    fetch("https://linkedin-curator-198258385336.us-central1.run.app/generate-comments", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(latestPostData),
@@ -32,32 +41,31 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
 
     return true; // Keeps message channel open for async response
   }
+
   if (request.action === "inject_comment") {
     const tabId = request.tabId || sender.tab?.id;
-    
-   chrome.scripting.executeScript({
-  target: { tabId: tabId },
-  func: (commentText) => {
-    const targetPost = document.querySelector('[data-ai-curator-comment-target="true"]');
-    if (!targetPost) {
-      alert("⚠️ Could not find the correct post. Please re-click 'Post Comment' on the post.");
-      return;
-    }
 
-    const commentBox = targetPost.querySelector('div[role="textbox"]');
-    if (commentBox) {
-      commentBox.focus();
-      document.execCommand("insertText", false, commentText);
-    } else {
-      alert("⚠️ Comment box not found. Please click 'Comment' on the post manually before hitting 'Post This'.");
-    }
+    chrome.scripting.executeScript({
+      target: { tabId: tabId },
+      func: (commentText) => {
+        const targetPost = document.querySelector('[data-ai-curator-comment-target="true"]');
+        if (!targetPost) {
+          alert("⚠️ Could not find the correct post. Please re-click 'Post Comment' on the post.");
+          return;
+        }
 
-    // Clean up marker
-    targetPost.removeAttribute("data-ai-curator-comment-target");
-  },
-  args: [request.comment]
-});
- 
-}
+        const commentBox = targetPost.querySelector('div[role="textbox"]');
+        if (commentBox) {
+          commentBox.focus();
+          document.execCommand("insertText", false, commentText);
+        } else {
+          alert("⚠️ Comment box not found. Please click 'Comment' on the post manually before hitting 'Post This'.");
+        }
 
+        // Clean up marker
+        targetPost.removeAttribute("data-ai-curator-comment-target");
+      },
+      args: [request.comment]
+    });
+  }
 });

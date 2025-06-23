@@ -1,0 +1,9 @@
+# General ignores
+*.pyc
+__pycache__/
+.venv/
+.env
+.DS_Store
+
+# DO NOT ignore credentials.json
+!backend/keys/credentials.json

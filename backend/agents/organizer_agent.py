@@ -9,7 +9,7 @@ from googleapiclient.discovery import build
 class OrganizerAgent(BaseAgent):
     folder_name: str = "F_LinkedIn_AI_Curation"
     sheet_name: str = "S_LinkedIn_AI_Curation"
-    creds_path: str = os.getenv("GOOGLE_SHEET_CREDS_PATH")
+   
 
     drive_service: ClassVar[Optional[object]] = None
     sheets_service: ClassVar[Optional[object]] = None
@@ -17,12 +17,15 @@ class OrganizerAgent(BaseAgent):
 
     def __init__(self):
         super().__init__(name="organizer_agent")
+        creds_path = os.environ.get("GOOGLE_APPLICATION_CREDENTIALS")
+        if not creds_path:
+            raise ValueError("Missing GOOGLE_APPLICATION_CREDENTIALS environment variable")
 
         creds = Credentials.from_service_account_file(
-            self.creds_path,
+            creds_path,
             scopes=["https://www.googleapis.com/auth/drive", "https://www.googleapis.com/auth/spreadsheets"]
-        )
-
+    )
+        
         OrganizerAgent.drive_service = build("drive", "v3", credentials=creds)
         OrganizerAgent.sheets_service = build("sheets", "v4", credentials=creds)
 

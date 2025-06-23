@@ -1,3 +1,4 @@
+
 # 🧠 LinkedIn AI Curator – Chrome Extension + Google ADK Project
 
 **LinkedInAI_Assistant** is an intelligent AI-powered Chrome extension built for the **Google ADK Hackathon**. It empowers professionals to **save** and **comment** on LinkedIn posts with the help of Google’s Agent Development Kit (ADK) and Gemini models.
@@ -12,7 +13,6 @@
 - **Save Post**: Extracts LinkedIn content, author, and engagement metrics
 - **Post Comment**: Suggests 3 professional AI-generated comments
 - Interactive UIs:
-  - `popup.html`: Shows saved posts
   - `popup-comment.html`: Displays comment suggestions
 
 ### 🤖 Backend AI Agent Flow (via Google ADK)
@@ -43,7 +43,7 @@ LinkedInAI_Assistant/
 │   │   ├── comment_agent.py
 │   │   └── organizer_agent.py
 │   │
-│   ├── key/
+│   ├── keys/
 │   │   └── credentials.json
 │   │
 │   ├── gemini_config.py
@@ -71,8 +71,8 @@ LinkedInAI_Assistant/
 
 ### 1. Clone the Repository
 ```bash
-git clone https://github.com/<your_username>/LinkedInAI_Assistant.git
-cd LinkedInAI_Assistant
+git clone https://github.com/AJ141181/LinkedIn-AI-Assistant.git
+cd LinkedIn-AI-Assistant
 ```
 
 ### 2. Install Python Dependencies
@@ -81,31 +81,73 @@ pip install -r requirements.txt
 ```
 
 ### 3. Set Up Google Credentials
-- Ensure `credentials.json` is inside `backend/key/`
+- Ensure `credentials.json` is inside `backend/keys/`
 - Enable **Google Sheets API** and **Drive API** in your Google Cloud Project
 - Share your destination spreadsheet with the service account email found in `credentials.json`
 
-### 4. Run the Backend Pipeline
+### 4. Run the Backend Pipeline Locally
 ```bash
 python backend/main.py
 ```
 
 ---
 
+### 🔑 Gemini API Key Setup
+
+Ensure your Gemini API key is configured in `backend/gemini_config.py`:
+
+```python
+import google.generativeai as genai
+
+genai.configure(api_key="YOUR_API_KEY")
+model = genai.GenerativeModel("gemini-pro")
+```
+
+> ⚠️ Do not share your API key publicly or commit it to GitHub.
+
+---
+
 ## 🧩 Chrome Extension Setup
 
-1. Open Chrome and navigate to `chrome://extensions`
+1. Open Chrome and go to [`chrome://extensions`](chrome://extensions)
 2. Enable **Developer Mode**
 3. Click **Load unpacked** and select the `frontend/` folder
-4. Go to LinkedIn and:
-   - Click **Save Post** to trigger curation pipeline
-   - Click **Post Comment** to generate professional suggestions
+4. Navigate to LinkedIn and:
+   - Click **🔖 Save Post** to trigger the curation pipeline
+   - Click **💬 Post Comment** to open the extension with suggested replies
+
+---
+
+## 🌐 Live Backend URL (for Testing)
+
+```
+https://linkedin-curator-198258385336.us-central1.run.app
+```
+
+---
+
+## 🚀 Cloud Deployment via Docker (Optional)
+
+To deploy the backend to **Google Cloud Run**:
+
+```bash
+gcloud builds submit --tag gcr.io/YOUR_PROJECT_ID/linkedin-curator
+
+gcloud run deploy linkedin-curator \
+  --image gcr.io/YOUR_PROJECT_ID/linkedin-curator \
+  --platform managed \
+  --region us-central1 \
+  --allow-unauthenticated
+```
+
+> Replace `YOUR_PROJECT_ID` with your actual GCP project ID.
 
 ---
 
 ## 🔐 Required API Scopes
 
-Your service account must have:
+Your service account must have access to:
+
 - `https://www.googleapis.com/auth/drive`
 - `https://www.googleapis.com/auth/spreadsheets`
 
