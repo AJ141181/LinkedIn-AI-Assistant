@@ -20,8 +20,8 @@ def save_post():
 
         # 🚀 Call root orchestrator agent to process post data
         
-        result = root_agent(post_data)
-        
+        #result = root_agent(post_data)
+        result = root_agent.run(post_data)
 
         print("✅ Orchestration Result:", result)
         return jsonify({"status": "success", "result": result}), 200
